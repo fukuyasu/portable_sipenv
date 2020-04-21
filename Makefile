@@ -79,7 +79,6 @@ MINGIT_ZIP = MinGit-${GITFORWINDOWS_VERSION}-64-bit.zip
 ########################################################################
 
 JCLINIT_SRC = jclinit.src
-JCLINIT_GIT_SRC = jclinit_git.src
 JCLINIT_BAT = jclinit.bat
 JAVAENV_SRC = javaenv.src
 JAVAENV_BAT = javaenv.bat
