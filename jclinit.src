@@ -4,6 +4,6 @@ echo __TITLE__
 echo Command-Line Environment ver.__VERSION__
 echo.
 
-set Path=%~dp0MinGit\cmd;%Path%
+set Path=%~dp0__PORTABLEGIT_DIR__\bin;%Path%
 
 javaenv.bat __JAVA_MAJOR__
