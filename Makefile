@@ -5,7 +5,7 @@
 # Project name
 PROJECT_NAME = sipenv
 # Portable SIPenv ver. num.
-VERSION = 3.0-rc0
+VERSION = 3.0-rc1
 # Command-Line Env. ver. num.
 CLE_VERSION = 1.0
 # Portable SIPenv Title
@@ -29,21 +29,21 @@ SHELL = /bin/sh
 #
 # ファイル／ディレクトリ構造
 #   ${SIPENV_DIR} -+- ${JAVA_DIR} -+- ${JAVA_MAJOR} : JAVA_HOME
-#                  +- ${MINGIT_DIR} : MinGit
+#                  +- ${PORTABLEGIT_DIR} : PortableGit
 #                  +- ${ECLIPSE_DIR} : eclipse + pleiades
-#                  +- ${GIT_WORKSPACE} : git repository
+#                  +- ${WORKSPACE_DIR} : work
 #                  +- ${ECLIPSE_WORKSPACE} : eclipse workspace
 #                  +- Java command-line.lnk
-#                  +- simpinit.bat
+#                  +- jclinit.bat
 #                  +- javaenv.bat
 #                  +- version.txt
 
 SIPENV_DIR = sipenv
 JAVA_DIR = java
 ECLIPSE_DIR = eclipse
-MINGIT_DIR = MinGit
+PORTABLEGIT_DIR = PortableGit
+WORKSPACE_DIR = work
 ECLIPSE_WORKSPACE = workspace
-GIT_WORKSPACE = git
 
 ########################################################################
 
@@ -73,8 +73,8 @@ PLEIADES_DIR = pleiades
 
 ########################################################################
 
-GITFORWINDOWS_VERSION = 2.26.1
-MINGIT_ZIP = MinGit-${GITFORWINDOWS_VERSION}-64-bit.zip
+GITFORWINDOWS_VERSION = 2.26.2
+PORTABLEGIT_DIST = PortableGit-${GITFORWINDOWS_VERSION}-64-bit.7z.exe
 
 ########################################################################
 
@@ -91,17 +91,16 @@ WORK_DIR = work
 
 ########################################################################
 
-all: sipenv-zip
+all: sipenv-all
 
 ########################################################################
 
 ZIP_FILE = ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.`date "+%Y%m%d"`.zip
 
-sipenv-zip: ${SIPENV_DIR} java-env install-eclipse install-pleiades config-eclipse install-mingit ${SIPENV_DIR}/version.txt
+sipenv-zip: sipenv-all ${SIPENV_DIR}/version.txt
 	${7Z} a ${ZIP_FILE} ${SIPENV_DIR}
 
-${SIPENV_DIR}:
-	${MKDIR} ${SIPENV_DIR}
+sipenv-all: ${SIPENV_DIR} java-env ${SIPENV_DIR}/${WORKSPACE_DIR} install-eclipse install-pleiades config-eclipse install-portablegit
 
 ${SIPENV_DIR}/version.txt:
 	${MKDIR} ${SIPENV_DIR}
@@ -113,6 +112,9 @@ ${SIPENV_DIR}/version.txt:
 	echo -e "eclipse=${ECLIPSE_VERSION}\r" >>  ${SIPENV_DIR}/version.txt
 	echo -e "pleiades=${PLEIADES_VERSION}\r" >>  ${SIPENV_DIR}/version.txt
 
+${SIPENV_DIR}:
+	${MKDIR} ${SIPENV_DIR}
+
 ########################################################################
 
 java-env: java-command-line install-jdk${JAVA_MAJOR}
@@ -123,6 +125,7 @@ java-command-line: ${SIPENV_DIR}
 	    | ${SED} -e 's|__VERSION__|${CLE_VERSION}|g' \
 		     -e 's|__JAVA_MAJOR__|${JAVA_MAJOR}|g' \
 		     -e 's|__TITLE__|${SIPENV_TITLE}|g' \
+		     -e 's|__PORTABLEGIT_DIR__|${PORTABLEGIT_DIR}|g' \
 	    > ${SIPENV_DIR}/${JCLINIT_BAT}
 	cat ${JAVAENV_SRC} \
 	    | ${SED} -e 's|__JAVA_DIR__|${JAVA_DIR}|g' \
@@ -175,14 +178,13 @@ ${WORK_DIR}/${PLEIADES_DIR}:
 
 ########################################################################
 
-install-mingit: ${SIPENV_DIR}/${MINGIT_DIR}/cmd/git.exe ${SIPENV_DIR}/${GIT_WORKSPACE}
+install-portablegit: ${DIST_DIR}/${PORTABLEGIT_DIST} ${SIPENV_DIR}
+	${DIST_DIR}/${PORTABLEGIT_DIST} -y -o${SIPENV_DIR}/${PORTABLEGIT_DIR}
 
-${SIPENV_DIR}/${MINGIT_DIR}/cmd/git.exe:
-	${MKDIR} ${SIPENV_DIR}
-	${7Z} x ${DIST_DIR}/${MINGIT_ZIP} -o${SIPENV_DIR}/${MINGIT_DIR}
+########################################################################
 
-${SIPENV_DIR}/${GIT_WORKSPACE}:
-	${MKDIR} ${SIPENV_DIR}/${GIT_WORKSPACE}
+${SIPENV_DIR}/${WORKSPACE_DIR}:
+	${MKDIR} ${SIPENV_DIR}/${WORKSPACE_DIR}
 
 ########################################################################
 
