@@ -33,7 +33,7 @@ $ make
 ## How to install
 - `sipenv-x.x.yyyymmdd.zip`をCドライブの直下（C:\）に展開する
 - Windows標準のエクスプローラーでは展開に時間がかかる
-- Lhaplus, 7-Zipで展開できることを確認済み
+- 7-Zipで展開できることを確認済み
 
 ## 展開後のディレクトリ構成
 ```
@@ -41,9 +41,9 @@ sipenv
    +-- eclipse
    |      +-- eclipse.exe  (Pleiades plugin適用済みEclipse)
    +-- java
-   |      +-- 11  (JDK 11)
-   +-- MinGit  (Git)
-   +-- git     (gitリポジトリ用)
+   |      +-- 11  (AdoptOpenJDK 11)
+   +-- PortableGit
+   +-- work
    +-- workspace
    +-- Java command-line.lnk  (cmd.exeへのショートカット)
    +-- javaenv.bat  (JDK切り替え用バッチファイル)
