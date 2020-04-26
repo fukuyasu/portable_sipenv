@@ -46,6 +46,8 @@ PORTABLEGIT_DIR = PortableGit
 WORKSPACE_DIR = work
 ECLIPSE_WORKSPACE = workspace
 
+VERSION_TXT = version.txt
+
 ########################################################################
 
 JAVA_MAJOR = 11
@@ -120,24 +122,25 @@ ${SIPENV_DIR}:
 ${SIPENV_DIR}/${WORKSPACE_DIR}:
 	${MKDIR} ${SIPENV_DIR}/${WORKSPACE_DIR}
 
-${SIPENV_DIR}/version.txt: ${SIPENV_DIR}
-	echo -e "version=${VERSION}\r\ncreated="`date "+%Y/%m/%d %T"`"\r" > ${SIPENV_DIR}/version.txt
+${SIPENV_DIR}/${VERSION_TXT}: ${SIPENV_DIR}
+	echo -e "version=${VERSION}\r\ncreated="`date "+%Y/%m/%d %T"`"\r" > ${SIPENV_DIR}/${VERSION_TXT}
 
 ########################################################################
 
 install-jdk11:
 	${MAKE} ${MAKE_FLAGS} JAVA_MAJOR=11 JAVA_MINOR=${JAVA11_MINOR} JAVA_PATCH=${JAVA11_PATCH} JAVA_VERSION=${JAVA11_VERSION} JAVA_ZIP=${JAVA11_ZIP} install-jdk
 
-install-jdk: ${SIPENV_DIR} ${SIPENV_DIR}/${JAVA_DIR}/${JAVA_MAJOR} ${SIPENV_DIR}/version.txt
-	if [ -x ${SIPENV_DIR}/${JAVA_DIR}/${JAVA_MAJOR}/bin/java ]; then \
-	    ${SIPENV_DIR}/${JAVA_DIR}/${JAVA_MAJOR}/bin/java -version 2>&1 \
-		| head -1 >>  ${SIPENV_DIR}/version.txt; \
-	fi
+install-jdk: ${SIPENV_DIR}/${JAVA_DIR}/${JAVA_MAJOR}
 
 ${SIPENV_DIR}/${JAVA_DIR}/${JAVA_MAJOR}:
+	${MAKE} ${MAKE_FLAGS} ${SIPENV_DIR}
+	${MAKE} ${MAKE_FLAGS} ${SIPENV_DIR}/${VERSION_TXT}
 	${7Z} x ${DIST_DIR}/${JAVA_ZIP} -o${SIPENV_DIR}/${JAVA_DIR}
 	${MV} ${SIPENV_DIR}/${JAVA_DIR}/jdk${JAVA_VERSION}  ${SIPENV_DIR}/${JAVA_DIR}/${JAVA_MAJOR}
-
+	if [ -x ${SIPENV_DIR}/${JAVA_DIR}/${JAVA_MAJOR}/bin/java ]; then \
+	    ${SIPENV_DIR}/${JAVA_DIR}/${JAVA_MAJOR}/bin/java -version 2>&1 \
+		| head -1 >>  ${SIPENV_DIR}/${VERSION_TXT}; \
+	fi
 ########################################################################
 
 install-jcl: install-jdk${JAVA_MAJOR} java-command-line
@@ -168,7 +171,7 @@ ${SIPENV_DIR}/${JAVAENV_BAT}: ${SIPENV_DIR} ${JAVAENV_SRC}
 ECLIPSE_INI = ${SIPENV_DIR}/${ECLIPSE_DIR}/eclipse.ini
 
 install-pleiades: install-eclipse ${SIPENV_DIR}/${ECLIPSE_DIR}/plugins/jp.sourceforge.mergedoc.pleiades/pleiades.jar
-	echo -e "pleiades=${PLEIADES_VERSION}\r" >>  ${SIPENV_DIR}/version.txt
+	echo -e "pleiades=${PLEIADES_VERSION}\r" >>  ${SIPENV_DIR}/${VERSION_TXT}
 
 ${SIPENV_DIR}/${ECLIPSE_DIR}/plugins/jp.sourceforge.mergedoc.pleiades/pleiades.jar:
 	${MAKE} ${MAKE_FLAGS} ${WORK_DIR}/${PLEIADES_DIR}
@@ -183,7 +186,7 @@ ${WORK_DIR}/${PLEIADES_DIR}:
 	${7Z} x ${DIST_DIR}/${PLEIADES_ZIP} -o${WORK_DIR}/${PLEIADES_DIR}
 
 install-eclipse: install-jdk${JAVA_MAJOR} ${SIPENV_DIR}/${ECLIPSE_DIR} config-eclipse
-	echo -e "eclipse=${ECLIPSE_VERSION}\r" >>  ${SIPENV_DIR}/version.txt
+	echo -e "eclipse=${ECLIPSE_VERSION}\r" >>  ${SIPENV_DIR}/${VERSION_TXT}
 
 ${SIPENV_DIR}/${ECLIPSE_DIR}:
 	${7Z} x ${DIST_DIR}/${ECLIPSE_ZIP} -o${SIPENV_DIR}
@@ -203,7 +206,7 @@ config-eclipse:
 
 install-jcl-git: install-portablegit
 	${MAKE} ${MAKE_FLAGS} JCLINIT_SRC=${JCLINIT_GIT_SRC} install-jcl
-	echo -e "git=${GITFORWINDOWS_VERSION}\r" >>  ${SIPENV_DIR}/version.txt
+	echo -e "git=${GITFORWINDOWS_VERSION}\r" >>  ${SIPENV_DIR}/${VERSION_TXT}
 
 install-portablegit: ${SIPENV_DIR}/${PORTABLEGIT_DIR}
 
