@@ -133,6 +133,7 @@ ${SIPENV_DIR}/${JCLINIT_BAT}: ${JCLINIT_SRC}
 	    | ${SED} -e 's|__VERSION__|${CLE_VERSION}|g' \
 		     -e 's|__JAVA_MAJOR__|${JAVA_MAJOR}|g' \
 		     -e 's|__TITLE__|${SIPENV_TITLE}|g' \
+		     -e 's|__WORKSPACE_DIR__|${WORKSPACE_DIR}|g' \
 		     -e 's|__PORTABLEGIT_DIR__|${PORTABLEGIT_DIR}|g' \
 	    > ${SIPENV_DIR}/${JCLINIT_BAT}
 	${ATTRIB} +r +h +s ${SIPENV_DIR}/${JCLINIT_BAT}

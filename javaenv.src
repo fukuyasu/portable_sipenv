@@ -13,4 +13,6 @@ set Path=%JAVA_HOME%\bin;%PATH_ORG%
 
 java -version
 
+echo.
+
 :end
