@@ -101,7 +101,7 @@ ZIP_FILE = ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.`date "+%Y%m%d"`.zip
 sipenv-zip: sipenv-all ${SIPENV_DIR}/version.txt
 	${7Z} a ${ZIP_FILE} ${SIPENV_DIR}
 
-sipenv-all: ${SIPENV_DIR} java-env ${SIPENV_DIR}/${WORKSPACE_DIR} install-eclipse install-pleiades config-eclipse install-portablegit
+sipenv-all: ${SIPENV_DIR} java-env install-eclipse install-pleiades config-eclipse install-portablegit
 
 ${SIPENV_DIR}/version.txt:
 	${MKDIR} ${SIPENV_DIR}
@@ -120,7 +120,10 @@ ${SIPENV_DIR}:
 
 java-env: install-jdk${JAVA_MAJOR} java-command-line
 
-java-command-line: ${SIPENV_DIR} ${SIPENV_DIR}/${JCLINIT_BAT} ${SIPENV_DIR}/${JAVAENV_BAT} ${SIPENV_DIR}/Java\ command-line.lnk
+java-command-line: ${SIPENV_DIR} ${SIPENV_DIR}/${WORKSPACE_DIR} ${SIPENV_DIR}/${JCLINIT_BAT} ${SIPENV_DIR}/${JAVAENV_BAT} ${SIPENV_DIR}/Java\ command-line.lnk
+
+${SIPENV_DIR}/${WORKSPACE_DIR}:
+	${MKDIR} ${SIPENV_DIR}/${WORKSPACE_DIR}
 
 ${SIPENV_DIR}/Java\ command-line.lnk: Java\ command-line.lnk
 	${CP} "Java command-line.lnk" ${SIPENV_DIR}
@@ -189,11 +192,6 @@ ${WORK_DIR}/${PLEIADES_DIR}:
 
 install-portablegit: ${DIST_DIR}/${PORTABLEGIT_DIST} ${SIPENV_DIR}
 	${DIST_DIR}/${PORTABLEGIT_DIST} -y -o${SIPENV_DIR}/${PORTABLEGIT_DIR}
-
-########################################################################
-
-${SIPENV_DIR}/${WORKSPACE_DIR}:
-	${MKDIR} ${SIPENV_DIR}/${WORKSPACE_DIR}
 
 ########################################################################
 
