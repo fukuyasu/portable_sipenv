@@ -15,6 +15,7 @@ SIPENV_TITLE = Programming Environment / Socio-Informatics Major
 
 7Z = /c/Program\ Files/7-Zip/7z
 EXTRAC32 = /c/WINDOWS/system32/extrac32
+ATTRIB = /c/WINDOWS/system32/attrib
 
 RM = /bin/rm -f
 CP = /bin/cp -p
@@ -130,6 +131,8 @@ java-command-line: ${SIPENV_DIR}
 	cat ${JAVAENV_SRC} \
 	    | ${SED} -e 's|__JAVA_DIR__|${JAVA_DIR}|g' \
 	    > ${SIPENV_DIR}/${JAVAENV_BAT}
+	${ATTRIB} +r +h +s ${SIPENV_DIR}/${JCLINIT_BAT}
+	${ATTRIB} +r +h +s ${SIPENV_DIR}/${JAVAENV_BAT}
 
 install-jdk11:
 	${MAKE} ${MAKE_FLAGS} JAVA_MAJOR=11 JAVA_MINOR=${JAVA11_MINOR} JAVA_PATCH=${JAVA11_PATCH} JAVA_VERSION=${JAVA11_VERSION} JAVA_ZIP=${JAVA11_ZIP} install-jdk
