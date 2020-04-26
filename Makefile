@@ -15,6 +15,7 @@ SIPENV_TITLE = Programming Environment / Socio-Informatics Major
 
 7Z = /c/Program\ Files/7-Zip/7z
 EXTRAC32 = /c/WINDOWS/system32/extrac32
+ATTRIB = /c/WINDOWS/system32/attrib
 
 RM = /bin/rm -f
 CP = /bin/cp -p
@@ -100,7 +101,7 @@ ZIP_FILE = ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.`date "+%Y%m%d"`.zip
 sipenv-zip: sipenv-all ${SIPENV_DIR}/version.txt
 	${7Z} a ${ZIP_FILE} ${SIPENV_DIR}
 
-sipenv-all: ${SIPENV_DIR} java-env ${SIPENV_DIR}/${WORKSPACE_DIR} install-eclipse install-pleiades config-eclipse install-portablegit
+sipenv-all: ${SIPENV_DIR} java-env install-eclipse install-pleiades config-eclipse install-portablegit
 
 ${SIPENV_DIR}/version.txt:
 	${MKDIR} ${SIPENV_DIR}
@@ -117,19 +118,31 @@ ${SIPENV_DIR}:
 
 ########################################################################
 
-java-env: java-command-line install-jdk${JAVA_MAJOR}
+java-env: install-jdk${JAVA_MAJOR} java-command-line
 
-java-command-line: ${SIPENV_DIR}
+java-command-line: ${SIPENV_DIR} ${SIPENV_DIR}/${WORKSPACE_DIR} ${SIPENV_DIR}/${JCLINIT_BAT} ${SIPENV_DIR}/${JAVAENV_BAT} ${SIPENV_DIR}/Java\ command-line.lnk
+
+${SIPENV_DIR}/${WORKSPACE_DIR}:
+	${MKDIR} ${SIPENV_DIR}/${WORKSPACE_DIR}
+
+${SIPENV_DIR}/Java\ command-line.lnk: Java\ command-line.lnk
 	${CP} "Java command-line.lnk" ${SIPENV_DIR}
+
+${SIPENV_DIR}/${JCLINIT_BAT}: ${JCLINIT_SRC}
 	cat ${JCLINIT_SRC} \
 	    | ${SED} -e 's|__VERSION__|${CLE_VERSION}|g' \
 		     -e 's|__JAVA_MAJOR__|${JAVA_MAJOR}|g' \
 		     -e 's|__TITLE__|${SIPENV_TITLE}|g' \
+		     -e 's|__WORKSPACE_DIR__|${WORKSPACE_DIR}|g' \
 		     -e 's|__PORTABLEGIT_DIR__|${PORTABLEGIT_DIR}|g' \
 	    > ${SIPENV_DIR}/${JCLINIT_BAT}
+	${ATTRIB} +r +h +s ${SIPENV_DIR}/${JCLINIT_BAT}
+
+${SIPENV_DIR}/${JAVAENV_BAT}: ${JAVAENV_SRC}
 	cat ${JAVAENV_SRC} \
 	    | ${SED} -e 's|__JAVA_DIR__|${JAVA_DIR}|g' \
 	    > ${SIPENV_DIR}/${JAVAENV_BAT}
+	${ATTRIB} +r +h +s ${SIPENV_DIR}/${JAVAENV_BAT}
 
 install-jdk11:
 	${MAKE} ${MAKE_FLAGS} JAVA_MAJOR=11 JAVA_MINOR=${JAVA11_MINOR} JAVA_PATCH=${JAVA11_PATCH} JAVA_VERSION=${JAVA11_VERSION} JAVA_ZIP=${JAVA11_ZIP} install-jdk
@@ -180,11 +193,6 @@ ${WORK_DIR}/${PLEIADES_DIR}:
 
 install-portablegit: ${DIST_DIR}/${PORTABLEGIT_DIST} ${SIPENV_DIR}
 	${DIST_DIR}/${PORTABLEGIT_DIST} -y -o${SIPENV_DIR}/${PORTABLEGIT_DIR}
-
-########################################################################
-
-${SIPENV_DIR}/${WORKSPACE_DIR}:
-	${MKDIR} ${SIPENV_DIR}/${WORKSPACE_DIR}
 
 ########################################################################
 
