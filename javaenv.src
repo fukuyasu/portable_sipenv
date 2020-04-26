@@ -1,18 +1,12 @@
 @echo off
 
-IF NOT "%PATH_ORG%"=="" GOTO javaenv
-
-set PATH_ORG=%Path%
-
-:javaenv
+IF "%JENV_ORG_PATH%"=="" set JENV_ORG_PATH=%Path%
 
 IF NOT EXIST "%~dp0__JAVA_DIR__\%1\bin\" GOTO end
 
 set JAVA_HOME=%~dp0__JAVA_DIR__\%1
-set Path=%JAVA_HOME%\bin;%PATH_ORG%
-
+set Path=%JAVA_HOME%\bin;%JENV_ORG_PATH%
 java -version
-
 echo.
 
 :end

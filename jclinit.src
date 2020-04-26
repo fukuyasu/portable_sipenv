@@ -4,8 +4,11 @@ echo __TITLE__
 echo Command-Line Environment ver.__VERSION__
 echo.
 
-set Path=%~dp0__PORTABLEGIT_DIR__\bin;%~dp0;%Path%
+IF NOT DEFINED ORG_PATH set ORG_PATH=%Path%
+set Path=%ORG_PATH%
 
-cd __WORKSPACE_DIR__
+IF EXIST "%~dp0__PORTABLEGIT_DIR__\bin" set Path=%~dp0__PORTABLEGIT_DIR__\bin;%Path%
 
-javaenv.bat __JAVA_MAJOR__
+call %~dp0javaenv.bat __JAVA_MAJOR__
+
+cd %~dp0\__WORKSPACE_DIR__
