@@ -118,20 +118,26 @@ ${SIPENV_DIR}:
 
 ########################################################################
 
-java-env: java-command-line install-jdk${JAVA_MAJOR}
+java-env: install-jdk${JAVA_MAJOR} java-command-line
 
-java-command-line: ${SIPENV_DIR}
+java-command-line: ${SIPENV_DIR} ${SIPENV_DIR}/${JCLINIT_BAT} ${SIPENV_DIR}/${JAVAENV_BAT} ${SIPENV_DIR}/Java\ command-line.lnk
+
+${SIPENV_DIR}/Java\ command-line.lnk: Java\ command-line.lnk
 	${CP} "Java command-line.lnk" ${SIPENV_DIR}
+
+${SIPENV_DIR}/${JCLINIT_BAT}: ${JCLINIT_SRC}
 	cat ${JCLINIT_SRC} \
 	    | ${SED} -e 's|__VERSION__|${CLE_VERSION}|g' \
 		     -e 's|__JAVA_MAJOR__|${JAVA_MAJOR}|g' \
 		     -e 's|__TITLE__|${SIPENV_TITLE}|g' \
 		     -e 's|__PORTABLEGIT_DIR__|${PORTABLEGIT_DIR}|g' \
 	    > ${SIPENV_DIR}/${JCLINIT_BAT}
+	${ATTRIB} +r +h +s ${SIPENV_DIR}/${JCLINIT_BAT}
+
+${SIPENV_DIR}/${JAVAENV_BAT}: ${JAVAENV_SRC}
 	cat ${JAVAENV_SRC} \
 	    | ${SED} -e 's|__JAVA_DIR__|${JAVA_DIR}|g' \
 	    > ${SIPENV_DIR}/${JAVAENV_BAT}
-	${ATTRIB} +r +h +s ${SIPENV_DIR}/${JCLINIT_BAT}
 	${ATTRIB} +r +h +s ${SIPENV_DIR}/${JAVAENV_BAT}
 
 install-jdk11:
