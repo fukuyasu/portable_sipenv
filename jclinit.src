@@ -4,8 +4,16 @@ echo __TITLE__
 echo Command-Line Environment ver.__VERSION__
 echo.
 
-set Path=%~dp0__PORTABLEGIT_DIR__\bin;%~dp0;%Path%
+IF DEFINED ORG_PATH GOTO reset_path
+	set ORG_PATH=%Path%
 
-cd __WORKSPACE_DIR__
+:reset_path
+set Path=%ORG_PATH%
 
-javaenv.bat __JAVA_MAJOR__
+IF NOT EXIST "%~dp0__PORTABLEGIT_DIR__\bin" GOTO java_env
+	set Path=%~dp0__PORTABLEGIT_DIR__\bin;%Path%
+
+:java_env
+call %~dp0javaenv.bat __JAVA_MAJOR__
+
+cd %~dp0\__WORKSPACE_DIR__
