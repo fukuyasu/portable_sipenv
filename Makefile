@@ -80,7 +80,9 @@ PORTABLEGIT_DIST = PortableGit-${GITFORWINDOWS_VERSION}-64-bit.7z.exe
 ########################################################################
 
 JCLINIT_SRC = jclinit.src
+JCLINIT_GIT_SRC = jclinit-git.src
 JCLINIT_BAT = jclinit.bat
+
 JAVAENV_SRC = javaenv.src
 JAVAENV_BAT = javaenv.bat
 
@@ -98,37 +100,54 @@ all: sipenv-all
 
 ZIP_FILE = ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.`date "+%Y%m%d"`.zip
 
-sipenv-zip: sipenv-all ${SIPENV_DIR}/version.txt
+zip:
 	${7Z} a ${ZIP_FILE} ${SIPENV_DIR}
 
-sipenv-all: ${SIPENV_DIR} java-env install-eclipse install-pleiades config-eclipse install-portablegit
+########################################################################
 
-${SIPENV_DIR}/version.txt:
-	${MKDIR} ${SIPENV_DIR}
-	echo -e "version=${VERSION}\r\ncreated="`date "+%Y/%m/%d %T"`"\r" > ${SIPENV_DIR}/version.txt
-	if [ -x ${SIPENV_DIR}/${JAVA_DIR}/${JAVA_MAJOR}/bin/java ]; then \
-	    ${SIPENV_DIR}/${JAVA_DIR}/${JAVA_MAJOR}/bin/java -version 2>&1 \
-		| head -1 >>  ${SIPENV_DIR}/version.txt; \
-	fi
-	echo -e "eclipse=${ECLIPSE_VERSION}\r" >>  ${SIPENV_DIR}/version.txt
-	echo -e "pleiades=${PLEIADES_VERSION}\r" >>  ${SIPENV_DIR}/version.txt
+sipenv-jcl:	install-jcl
+sipenv-eclipse: install-eclipse
+sipenv-pleiades: install-pleiades
+sipenv-jcl-pleiades: install-jcl install-pleiades
+sipenv-jcl-git: install-jcl-git
+sipenv-jcl-git-pleiades: install-jcl-git install-pleiades
+
+########################################################################
 
 ${SIPENV_DIR}:
 	${MKDIR} ${SIPENV_DIR}
 
-########################################################################
-
-java-env: install-jdk${JAVA_MAJOR} java-command-line
-
-java-command-line: ${SIPENV_DIR} ${SIPENV_DIR}/${WORKSPACE_DIR} ${SIPENV_DIR}/${JCLINIT_BAT} ${SIPENV_DIR}/${JAVAENV_BAT} ${SIPENV_DIR}/Java\ command-line.lnk
-
 ${SIPENV_DIR}/${WORKSPACE_DIR}:
 	${MKDIR} ${SIPENV_DIR}/${WORKSPACE_DIR}
+
+${SIPENV_DIR}/version.txt: ${SIPENV_DIR}
+	echo -e "version=${VERSION}\r\ncreated="`date "+%Y/%m/%d %T"`"\r" > ${SIPENV_DIR}/version.txt
+
+########################################################################
+
+install-jdk11:
+	${MAKE} ${MAKE_FLAGS} JAVA_MAJOR=11 JAVA_MINOR=${JAVA11_MINOR} JAVA_PATCH=${JAVA11_PATCH} JAVA_VERSION=${JAVA11_VERSION} JAVA_ZIP=${JAVA11_ZIP} install-jdk
+
+install-jdk: ${SIPENV_DIR} ${SIPENV_DIR}/${JAVA_DIR}/${JAVA_MAJOR} ${SIPENV_DIR}/version.txt
+	if [ -x ${SIPENV_DIR}/${JAVA_DIR}/${JAVA_MAJOR}/bin/java ]; then \
+	    ${SIPENV_DIR}/${JAVA_DIR}/${JAVA_MAJOR}/bin/java -version 2>&1 \
+		| head -1 >>  ${SIPENV_DIR}/version.txt; \
+	fi
+
+${SIPENV_DIR}/${JAVA_DIR}/${JAVA_MAJOR}:
+	${7Z} x ${DIST_DIR}/${JAVA_ZIP} -o${SIPENV_DIR}/${JAVA_DIR}
+	${MV} ${SIPENV_DIR}/${JAVA_DIR}/jdk${JAVA_VERSION}  ${SIPENV_DIR}/${JAVA_DIR}/${JAVA_MAJOR}
+
+########################################################################
+
+install-jcl: install-jdk${JAVA_MAJOR} java-command-line
+
+java-command-line: ${SIPENV_DIR} ${SIPENV_DIR}/${WORKSPACE_DIR} ${SIPENV_DIR}/${JCLINIT_BAT} ${SIPENV_DIR}/${JAVAENV_BAT} ${SIPENV_DIR}/Java\ command-line.lnk
 
 ${SIPENV_DIR}/Java\ command-line.lnk: Java\ command-line.lnk
 	${CP} "Java command-line.lnk" ${SIPENV_DIR}
 
-${SIPENV_DIR}/${JCLINIT_BAT}: ${JCLINIT_SRC}
+${SIPENV_DIR}/${JCLINIT_BAT}: ${SIPENV_DIR} ${JCLINIT_SRC}
 	cat ${JCLINIT_SRC} \
 	    | ${SED} -e 's|__VERSION__|${CLE_VERSION}|g' \
 		     -e 's|__JAVA_MAJOR__|${JAVA_MAJOR}|g' \
@@ -138,28 +157,35 @@ ${SIPENV_DIR}/${JCLINIT_BAT}: ${JCLINIT_SRC}
 	    > ${SIPENV_DIR}/${JCLINIT_BAT}
 	${ATTRIB} +r +h +s ${SIPENV_DIR}/${JCLINIT_BAT}
 
-${SIPENV_DIR}/${JAVAENV_BAT}: ${JAVAENV_SRC}
+${SIPENV_DIR}/${JAVAENV_BAT}: ${SIPENV_DIR} ${JAVAENV_SRC}
 	cat ${JAVAENV_SRC} \
 	    | ${SED} -e 's|__JAVA_DIR__|${JAVA_DIR}|g' \
 	    > ${SIPENV_DIR}/${JAVAENV_BAT}
 	${ATTRIB} +r +h +s ${SIPENV_DIR}/${JAVAENV_BAT}
 
-install-jdk11:
-	${MAKE} ${MAKE_FLAGS} JAVA_MAJOR=11 JAVA_MINOR=${JAVA11_MINOR} JAVA_PATCH=${JAVA11_PATCH} JAVA_VERSION=${JAVA11_VERSION} JAVA_ZIP=${JAVA11_ZIP} install-jdk
-
-install-jdk: ${SIPENV_DIR} ${SIPENV_DIR}/${JAVA_DIR}/${JAVA_MAJOR}
-
-${SIPENV_DIR}/${JAVA_DIR}/${JAVA_MAJOR}:
-	${7Z} x ${DIST_DIR}/${JAVA_ZIP} -o${SIPENV_DIR}/${JAVA_DIR}
-	${MV} ${SIPENV_DIR}/${JAVA_DIR}/jdk${JAVA_VERSION}  ${SIPENV_DIR}/${JAVA_DIR}/${JAVA_MAJOR}
-
 ########################################################################
 
 ECLIPSE_INI = ${SIPENV_DIR}/${ECLIPSE_DIR}/eclipse.ini
 
-install-eclipse: ${SIPENV_DIR}/${ECLIPSE_DIR}
+install-pleiades: install-eclipse ${SIPENV_DIR}/${ECLIPSE_DIR}/plugins/jp.sourceforge.mergedoc.pleiades/pleiades.jar
+	echo -e "pleiades=${PLEIADES_VERSION}\r" >>  ${SIPENV_DIR}/version.txt
 
-${SIPENV_DIR}/${ECLIPSE_DIR}: install-jdk${JAVA_MAJOR}
+${SIPENV_DIR}/${ECLIPSE_DIR}/plugins/jp.sourceforge.mergedoc.pleiades/pleiades.jar:
+	${MAKE} ${MAKE_FLAGS} ${WORK_DIR}/${PLEIADES_DIR}
+	${FIND} ${WORK_DIR}/${PLEIADES_DIR} -mindepth 1 -maxdepth 1 ! -name "setup*" \
+		-exec ${CP} -R {} ${SIPENV_DIR}/${ECLIPSE_DIR}/ \;
+
+	# pleiades を有効化
+	echo '-Xverify:none' >> ${ECLIPSE_INI}
+	echo '-javaagent:plugins/jp.sourceforge.mergedoc.pleiades/pleiades.jar' >> ${ECLIPSE_INI}
+
+${WORK_DIR}/${PLEIADES_DIR}:
+	${7Z} x ${DIST_DIR}/${PLEIADES_ZIP} -o${WORK_DIR}/${PLEIADES_DIR}
+
+install-eclipse: install-jdk${JAVA_MAJOR} ${SIPENV_DIR}/${ECLIPSE_DIR} config-eclipse
+	echo -e "eclipse=${ECLIPSE_VERSION}\r" >>  ${SIPENV_DIR}/version.txt
+
+${SIPENV_DIR}/${ECLIPSE_DIR}:
 	${7Z} x ${DIST_DIR}/${ECLIPSE_ZIP} -o${SIPENV_DIR}
 
 	# Eclipse起動用のJREを ${JAVA_DIR}/${JAVA_MAJOR} にインストールしたバイナリに設定
@@ -175,23 +201,13 @@ config-eclipse:
 
 ########################################################################
 
-install-pleiades: ${SIPENV_DIR}/${ECLIPSE_DIR}/plugins/jp.sourceforge.mergedoc.pleiades/pleiades.jar
+install-jcl-git: install-portablegit
+	${MAKE} ${MAKE_FLAGS} JCLINIT_SRC=${JCLINIT_GIT_SRC} install-jcl
+	echo -e "git=${GITFORWINDOWS_VERSION}\r" >>  ${SIPENV_DIR}/version.txt
 
-${SIPENV_DIR}/${ECLIPSE_DIR}/plugins/jp.sourceforge.mergedoc.pleiades/pleiades.jar: install-eclipse
-	${MAKE} ${MAKE_FLAGS} ${WORK_DIR}/${PLEIADES_DIR}
-	${FIND} ${WORK_DIR}/${PLEIADES_DIR} -mindepth 1 -maxdepth 1 ! -name "setup*" \
-		-exec ${CP} -R {} ${SIPENV_DIR}/${ECLIPSE_DIR}/ \;
+install-portablegit: ${SIPENV_DIR}/${PORTABLEGIT_DIR}
 
-	# pleiades を有効化
-	echo '-Xverify:none' >> ${ECLIPSE_INI}
-	echo '-javaagent:plugins/jp.sourceforge.mergedoc.pleiades/pleiades.jar' >> ${ECLIPSE_INI}
-
-${WORK_DIR}/${PLEIADES_DIR}:
-	${7Z} x ${DIST_DIR}/${PLEIADES_ZIP} -o${WORK_DIR}/${PLEIADES_DIR}
-
-########################################################################
-
-install-portablegit: ${DIST_DIR}/${PORTABLEGIT_DIST} ${SIPENV_DIR}
+${SIPENV_DIR}/${PORTABLEGIT_DIR}: ${SIPENV_DIR}
 	${DIST_DIR}/${PORTABLEGIT_DIST} -y -o${SIPENV_DIR}/${PORTABLEGIT_DIR}
 
 ########################################################################

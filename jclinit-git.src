@@ -7,6 +7,8 @@ echo.
 IF NOT DEFINED ORG_PATH set ORG_PATH=%Path%
 set Path=%ORG_PATH%
 
+IF EXIST "%~dp0__PORTABLEGIT_DIR__\bin" set Path=%~dp0__PORTABLEGIT_DIR__\bin;%Path%
+
 call %~dp0javaenv.bat __JAVA_MAJOR__
 
 cd %~dp0\__WORKSPACE_DIR__
