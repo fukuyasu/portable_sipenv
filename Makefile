@@ -96,8 +96,8 @@ WORK_DIR = work
 
 ########################################################################
 
-all: sipenv-all
-sipenv-all: sipenv-git-jcl-pleiades
+all: sipenv
+sipenv: sipenv-git-jcl-pleiades
 
 ########################################################################
 
