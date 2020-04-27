@@ -109,16 +109,13 @@ zip:
 ########################################################################
 
 sipenv-jcl-zip: sipenv-jcl
-	${MAKE} ${MAKE_FLAGS} VERSION="${VERSION}-jcl" zip
-
-sipenv-pleiades-zip: sipenv-pleiades
-	${MAKE} ${MAKE_FLAGS} VERSION="${VERSION}-eclipse" zip
+	${MAKE} ${MAKE_FLAGS} VERSION="${VERSION}-java" zip
 
 sipenv-jcl-pleiades-zip: sipenv-jcl-pleiades
-	${MAKE} ${MAKE_FLAGS} VERSION="${VERSION}-jcl-eclipse" zip
+	${MAKE} ${MAKE_FLAGS} VERSION="${VERSION}-eclipse" zip
 
 sipenv-git-jcl-zip: sipenv-git-jcl
-	${MAKE} ${MAKE_FLAGS} VERSION="${VERSION}-git-jcl" zip
+	${MAKE} ${MAKE_FLAGS} VERSION="${VERSION}-git-java" zip
 
 sipenv-git-jcl-pleiades-zip: sipenv-git-jcl-pleiades
 	${MAKE} ${MAKE_FLAGS} VERSION="${VERSION}-git-eclipse" zip
