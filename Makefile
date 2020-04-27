@@ -143,7 +143,7 @@ ${SIPENV_DIR}/${JAVA_DIR}/${JAVA_MAJOR}:
 	${MAKE} ${MAKE_FLAGS} ${SIPENV_DIR}/${JAVAENV_BAT}
 	${MAKE} ${MAKE_FLAGS} ${SIPENV_DIR}/${VERSION_TXT}
 	if [ -x ${SIPENV_DIR}/${JAVA_DIR}/${JAVA_MAJOR}/bin/java ]; then \
-	    ${SIPENV_DIR}/${JAVA_DIR}/${JAVA_MAJOR}/bin/java -version 2>&1 \
+	    ${SIPENV_DIR}/${JAVA_DIR}/${JAVA_MAJOR}/bin/java --version 2>&1 \
 		| head -1 >>  ${SIPENV_DIR}/${VERSION_TXT}; \
 	fi
 
@@ -225,7 +225,10 @@ ${SIPENV_DIR}/${PORTABLEGIT_DIR}:
 	${DIST_DIR}/${PORTABLEGIT_DIST} -y -o${SIPENV_DIR}/${PORTABLEGIT_DIR}
 	${RM} ${SIPENV_DIR}/${JCLINIT_BAT}
 	${MAKE} ${MAKE_FLAGS} JCLINIT_SRC=${JCLINIT_GIT_SRC} install-jcl
-	echo -e "git=${GITFORWINDOWS_VERSION}\r" >>  ${SIPENV_DIR}/${VERSION_TXT}
+	if [ -x ${SIPENV_DIR}/${PORTABLEGIT_DIR}/bin/git ]; then \
+	    ${SIPENV_DIR}/${PORTABLEGIT_DIR}/bin/git --version 2>&1 \
+		| head -1 >>  ${SIPENV_DIR}/${VERSION_TXT}; \
+	fi
 
 ########################################################################
 
