@@ -5,7 +5,7 @@
 # Project name
 PROJECT_NAME = sipenv
 # Portable SIPenv ver. num.
-VERSION = 3.0-rc1
+VERSION = 3.0-rc2
 # Command-Line Env. ver. num.
 CLE_VERSION = 1.0
 # Portable SIPenv Title
