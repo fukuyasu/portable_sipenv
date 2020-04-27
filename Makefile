@@ -111,8 +111,8 @@ sipenv-jcl:	install-jcl
 sipenv-eclipse: install-eclipse
 sipenv-pleiades: install-pleiades
 sipenv-jcl-pleiades: install-jcl install-pleiades
-sipenv-jcl-git: install-jcl-git
-sipenv-jcl-git-pleiades: install-jcl-git install-pleiades
+sipenv-git-jcl: install-git-jcl
+sipenv-git-jcl-pleiades: install-git-jcl install-pleiades
 
 ########################################################################
 
@@ -218,7 +218,7 @@ ${SIPENV_DIR}/${ECLIPSE_WORKSPACE}:
 
 ########################################################################
 
-install-jcl-git: ${SIPENV_DIR}/${PORTABLEGIT_DIR}
+install-git-jcl: ${SIPENV_DIR}/${PORTABLEGIT_DIR}
 
 ${SIPENV_DIR}/${PORTABLEGIT_DIR}:
 	${MAKE} ${MAKE_FLAGS} ${SIPENV_DIR}
