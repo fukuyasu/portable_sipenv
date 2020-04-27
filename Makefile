@@ -107,6 +107,11 @@ zip:
 
 ########################################################################
 
+sipenv-jcl-zip: sipenv-jcl
+	${MAKE} ${MAKE_FLAGS} VERSION="${VERSION}-java" zip
+
+########################################################################
+
 sipenv-jcl:	install-jcl
 sipenv-eclipse: install-eclipse
 sipenv-pleiades: install-pleiades
