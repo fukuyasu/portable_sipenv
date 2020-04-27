@@ -96,8 +96,18 @@ WORK_DIR = work
 
 ########################################################################
 
-all: sipenv
-sipenv: sipenv-git-jcl-pleiades
+all: sipenv-all
+sipenv-all: sipenv-git-jcl-pleiades
+
+sipenv-all-zip:
+	${MAKE} ${MAKE_FLAGS} clean
+	${MAKE} ${MAKE_FLAGS} sipenv-jcl-zip
+	# ${MAKE} ${MAKE_FLAGS} clean	# jcl-pleiades includs jcl
+	${MAKE} ${MAKE_FLAGS} sipenv-jcl-pleiades-zip
+	${MAKE} ${MAKE_FLAGS} clean
+	${MAKE} ${MAKE_FLAGS} sipenv-git-jcl-zip
+	# ${MAKE} ${MAKE_FLAGS} clean	# git-jcl-pleiades (all) includes git-jcl
+	${MAKE} ${MAKE_FLAGS} sipenv-zip
 
 ########################################################################
 
