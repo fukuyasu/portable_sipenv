@@ -5,7 +5,7 @@
 # Project name
 PROJECT_NAME = sipenv
 # Portable SIPenv ver. num.
-VERSION = 3.0-rc2
+VERSION = 3.0
 # Command-Line Env. ver. num.
 CLE_VERSION = 1.0
 # Portable SIPenv Title
@@ -70,7 +70,7 @@ ECLIPSE_CONFIG_SCRIPT = eclipseconf.sh
 
 ########################################################################
 
-PLEIADES_VERSION = 2020.04.20
+PLEIADES_VERSION = 2020.04.27
 PLEIADES_ZIP = pleiades-win-${PLEIADES_VERSION}.zip
 PLEIADES_DIR = pleiades
 
