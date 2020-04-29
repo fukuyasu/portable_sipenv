@@ -1,5 +1,8 @@
 @echo off
 
+chcp 65001
+cls
+
 echo __TITLE__
 echo Command-Line Environment ver.__VERSION__
 echo.
