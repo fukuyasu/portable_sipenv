@@ -7,7 +7,7 @@ PROJECT_NAME = sipenv
 # Portable SIPenv ver. num.
 VERSION = 3.0
 # Command-Line Env. ver. num.
-CLE_VERSION = 1.0
+CLE_VERSION = 1.1
 # Portable SIPenv Title
 SIPENV_TITLE = Programming Environment / Socio-Informatics Major
 
