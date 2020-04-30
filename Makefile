@@ -37,6 +37,7 @@ SHELL = /bin/sh
 #                  +- Java command-line.lnk
 #                  +- jclinit.bat
 #                  +- javaenv.bat
+#                  +- setpath.bat
 #                  +- version.txt
 
 SIPENV_DIR = sipenv
@@ -82,11 +83,14 @@ PORTABLEGIT_DIST = PortableGit-${GITFORWINDOWS_VERSION}-64-bit.7z.exe
 ########################################################################
 
 JCLINIT_SRC = jclinit.src
-JCLINIT_GIT_SRC = jclinit-git.src
 JCLINIT_BAT = jclinit.bat
 
 JAVAENV_SRC = javaenv.src
 JAVAENV_BAT = javaenv.bat
+
+SETPATH_SRC = setpath.src	# not exist
+SETPATH_GIT_SRC = setpath-git.src
+SETPATH_BAT = setpath.bat
 
 ########################################################################
 
@@ -200,9 +204,15 @@ ${SIPENV_DIR}/${JCLINIT_BAT}: ${JCLINIT_SRC}
 		     -e 's|__JAVA_MAJOR__|${JAVA_MAJOR}|g' \
 		     -e 's|__TITLE__|${SIPENV_TITLE}|g' \
 		     -e 's|__WORKSPACE_DIR__|${WORKSPACE_DIR}|g' \
-		     -e 's|__PORTABLEGIT_DIR__|${PORTABLEGIT_DIR}|g' \
 	    > ${SIPENV_DIR}/${JCLINIT_BAT}
 	${ATTRIB} +r +h +s ${SIPENV_DIR}/${JCLINIT_BAT}
+
+${SIPENV_DIR}/${SETPATH_BAT}: ${SETPATH_SRC}
+	${MAKE} ${MAKE_FLAGS} ${SIPENV_DIR}
+	cat ${SETPATH_SRC} \
+	    | ${SED} -e 's|__PORTABLEGIT_DIR__|${PORTABLEGIT_DIR}|g' \
+	    > ${SIPENV_DIR}/${SETPATH_BAT}
+	${ATTRIB} +r +h +s ${SIPENV_DIR}/${SETPATH_BAT}
 
 ########################################################################
 
@@ -249,10 +259,10 @@ ${SIPENV_DIR}/${ECLIPSE_WORKSPACE}:
 install-git-jcl: ${SIPENV_DIR}/${PORTABLEGIT_DIR}
 
 ${SIPENV_DIR}/${PORTABLEGIT_DIR}:
+	${MAKE} ${MAKE_FLAGS} install-jcl
 	${MAKE} ${MAKE_FLAGS} ${SIPENV_DIR}
 	${DIST_DIR}/${PORTABLEGIT_DIST} -y -o${SIPENV_DIR}/${PORTABLEGIT_DIR}
-	${RM} ${SIPENV_DIR}/${JCLINIT_BAT}
-	${MAKE} ${MAKE_FLAGS} JCLINIT_SRC=${JCLINIT_GIT_SRC} install-jcl
+	${MAKE} ${MAKE_FLAGS} SETPATH_SRC=${SETPATH_GIT_SRC} ${SIPENV_DIR}/${SETPATH_BAT}
 	if [ -x ${SIPENV_DIR}/${PORTABLEGIT_DIR}/bin/git ]; then \
 	    ${SIPENV_DIR}/${PORTABLEGIT_DIR}/bin/git --version 2>&1 \
 		| head -1 >>  ${SIPENV_DIR}/${VERSION_TXT}; \
