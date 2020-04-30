@@ -1,0 +1,3 @@
+@echo off
+
+IF EXIST "%~dp0__PORTABLEGIT_DIR__\bin" set Path=%~dp0__PORTABLEGIT_DIR__\bin;%Path%
