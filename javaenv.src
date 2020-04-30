@@ -1,5 +1,7 @@
 @echo off
 
+IF DEFINED CLASSPATH set CLASSPATH=
+
 IF "%JENV_ORG_PATH%"=="" set JENV_ORG_PATH=%Path%
 
 IF NOT EXIST "%~dp0__JAVA_DIR__\%1\bin\" GOTO end
