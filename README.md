@@ -7,6 +7,19 @@ JDK + Eclipse + Pleiades + etc.
 - Pleiades: http://mergedoc.osdn.jp/
 - PortableGit: https://git-scm.com/, https://github.com/git-for-windows/git/releases/
 
+## バージョン番号
+
+X.YpZ
+- X: メジャーバージョン（ディレクトリ構成の変更，CLI環境の設定変更など）
+- Y: マイナーバージョン（JDKの変更）
+- Z: パッチレベル（JDK以外の更新）
+
+リリース
+| バージョン | リリース日 | JDK | Eclipse | Git |
+|:---|:---|:---|:---|:---|
+| 3.0p1 | 2020/06/27 | 11.0.7_10 | 2020-06-R | 2.27.0 |
+| 3.0   | 2020/04/30 | 11.0.7_10 | 2020-03-R | 2.26.2 |
+
 ## ディレクトリ構成
 ```
 portable_sipenv
