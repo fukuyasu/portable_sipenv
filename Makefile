@@ -5,7 +5,7 @@
 # Project name
 PROJECT_NAME = sipenv
 # Portable SIPenv ver. num.
-VERSION = 3.0p1
+VERSION = 3.0p2
 # Command-Line Env. ver. num.
 CLE_VERSION = 1.0
 # Portable SIPenv Title
@@ -57,7 +57,7 @@ JAVA_PATCH = ${JAVA11_PATCH}
 JAVA_VERSION = ${JAVA11_VERSION}
 JAVA_ZIP = ${JAVA11_ZIP}
 
-JAVA11_MINOR = 0.7
+JAVA11_MINOR = 0.8
 # JAVA11_PATCH = 10.1
 JAVA11_PATCH = 10
 JAVA11_VERSION = -11.${JAVA11_MINOR}+${JAVA11_PATCH}
@@ -65,19 +65,19 @@ JAVA11_ZIP = OpenJDK11U-jdk_x64_windows_hotspot_11.${JAVA11_MINOR}_${JAVA11_PATC
 
 ########################################################################
 
-ECLIPSE_VERSION = 2020-06-R
+ECLIPSE_VERSION = 2020-09-R
 ECLIPSE_ZIP = eclipse-java-${ECLIPSE_VERSION}-win32-x86_64.zip
 ECLIPSE_CONFIG_SCRIPT = eclipseconf.sh
 
 ########################################################################
 
-PLEIADES_VERSION = 2020.06.14
+PLEIADES_VERSION = 2020.09.20
 PLEIADES_ZIP = pleiades-win-${PLEIADES_VERSION}.zip
 PLEIADES_DIR = pleiades
 
 ########################################################################
 
-GITFORWINDOWS_VERSION = 2.27.0
+GITFORWINDOWS_VERSION = 2.28.0
 PORTABLEGIT_DIST = PortableGit-${GITFORWINDOWS_VERSION}-64-bit.7z.exe
 
 ########################################################################
