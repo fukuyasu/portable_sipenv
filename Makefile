@@ -5,7 +5,7 @@
 # Project name
 PROJECT_NAME = sipenv
 # Portable SIPenv ver. num.
-VERSION = 3.0p2
+VERSION = 3.0p3
 # Command-Line Env. ver. num.
 CLE_VERSION = 1.0
 # Portable SIPenv Title
@@ -30,7 +30,7 @@ SHELL = /bin/sh
 #
 # ファイル／ディレクトリ構造
 #   ${SIPENV_DIR} -+- ${JAVA_DIR} -+- ${JAVA_MAJOR} : JAVA_HOME
-#                  +- ${PORTABLEGIT_DIR} : PortableGit
+#                  +- ${MINGIT_DIR} : MinGit
 #                  +- ${ECLIPSE_DIR} : eclipse + pleiades
 #                  +- ${WORKSPACE_DIR} : work
 #                  +- ${ECLIPSE_WORKSPACE} : eclipse workspace
@@ -43,7 +43,7 @@ SHELL = /bin/sh
 SIPENV_DIR = sipenv
 JAVA_DIR = java
 ECLIPSE_DIR = eclipse
-PORTABLEGIT_DIR = PortableGit
+MINGIT_DIR = MinGit
 WORKSPACE_DIR = work
 ECLIPSE_WORKSPACE = workspace
 
@@ -57,28 +57,28 @@ JAVA_PATCH = ${JAVA11_PATCH}
 JAVA_VERSION = ${JAVA11_VERSION}
 JAVA_ZIP = ${JAVA11_ZIP}
 
-JAVA11_MINOR = 0.8
+JAVA11_MINOR = 0.10
 # JAVA11_PATCH = 10.1
-JAVA11_PATCH = 10
+JAVA11_PATCH = 9
 JAVA11_VERSION = -11.${JAVA11_MINOR}+${JAVA11_PATCH}
 JAVA11_ZIP = OpenJDK11U-jdk_x64_windows_hotspot_11.${JAVA11_MINOR}_${JAVA11_PATCH}.zip
 
 ########################################################################
 
-ECLIPSE_VERSION = 2020-09-R
+ECLIPSE_VERSION = 2020-12-R
 ECLIPSE_ZIP = eclipse-java-${ECLIPSE_VERSION}-win32-x86_64.zip
 ECLIPSE_CONFIG_SCRIPT = eclipseconf.sh
 
 ########################################################################
 
-PLEIADES_VERSION = 2020.09.20
+PLEIADES_VERSION = 2020.12.22
 PLEIADES_ZIP = pleiades-win-${PLEIADES_VERSION}.zip
 PLEIADES_DIR = pleiades
 
 ########################################################################
 
-GITFORWINDOWS_VERSION = 2.28.0
-PORTABLEGIT_DIST = PortableGit-${GITFORWINDOWS_VERSION}-64-bit.7z.exe
+GITFORWINDOWS_VERSION = 2.30.2
+MINGIT_ZIP = MinGit-${GITFORWINDOWS_VERSION}-64-bit.zip
 
 ########################################################################
 
@@ -210,7 +210,7 @@ ${SIPENV_DIR}/${JCLINIT_BAT}: ${JCLINIT_SRC}
 ${SIPENV_DIR}/${SETPATH_BAT}: ${SETPATH_SRC}
 	${MAKE} ${MAKE_FLAGS} ${SIPENV_DIR}
 	cat ${SETPATH_SRC} \
-	    | ${SED} -e 's|__PORTABLEGIT_DIR__|${PORTABLEGIT_DIR}|g' \
+	    | ${SED} -e 's|__MINGIT_DIR__|${MINGIT_DIR}|g' \
 	    > ${SIPENV_DIR}/${SETPATH_BAT}
 	${ATTRIB} +r +h +s ${SIPENV_DIR}/${SETPATH_BAT}
 
@@ -256,15 +256,15 @@ ${SIPENV_DIR}/${ECLIPSE_WORKSPACE}:
 
 ########################################################################
 
-install-git-jcl: ${SIPENV_DIR}/${PORTABLEGIT_DIR}
+install-git-jcl: ${SIPENV_DIR}/${MINGIT_DIR}
 
-${SIPENV_DIR}/${PORTABLEGIT_DIR}:
+${SIPENV_DIR}/${MINGIT_DIR}:
 	${MAKE} ${MAKE_FLAGS} install-jcl
 	${MAKE} ${MAKE_FLAGS} ${SIPENV_DIR}
-	${DIST_DIR}/${PORTABLEGIT_DIST} -y -o${SIPENV_DIR}/${PORTABLEGIT_DIR}
+	${7Z} x ${DIST_DIR}/${MINGIT_ZIP} -o${SIPENV_DIR}/${MINGIT_DIR}
 	${MAKE} ${MAKE_FLAGS} SETPATH_SRC=${SETPATH_GIT_SRC} ${SIPENV_DIR}/${SETPATH_BAT}
-	if [ -x ${SIPENV_DIR}/${PORTABLEGIT_DIR}/bin/git ]; then \
-	    ${SIPENV_DIR}/${PORTABLEGIT_DIR}/bin/git --version 2>&1 \
+	if [ -x ${SIPENV_DIR}/${MINGIT_DIR}/cmd/git ]; then \
+		${SIPENV_DIR}/${MINGIT_DIR}/cmd/git --version 2>&1 \
 		| head -1 >>  ${SIPENV_DIR}/${VERSION_TXT}; \
 	fi
 
@@ -293,5 +293,5 @@ clean-eclipse:
 	${RM} -R ${SIPENV_DIR}/.p2
 	${RM} -R ${SIPENV_DIR}/.tooling
 
-clean-portablegit:
-	${RM} -R ${SIPENV_DIR}/${PORTABLEGIT_DIR}
+clean-mingit:
+	${RM} -R ${SIPENV_DIR}/${MINGIT_DIR}
